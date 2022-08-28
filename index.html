@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./reset.css" />
+	<link rel="stylesheet" href="./style.css" />
+	<link rel="stylesheet" href="./main.css" />
+	<link href="./assets/img/logo.ico" rel="shortcut icon" type="image/x-icon">
+	<title>Dohwa-DoongDoong-Book!</title>
+	<script src="config.js"></script>
+	<script src="mintScript.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/8.0.2/bignumber.js" integrity="sha512-XQDG6H87RgMf+aNFwDPCUcFwUf3t9liyqN/2BkJ8KGixupbjPwQHNhypNA972mLIkg4KPo4lkGmqAf3yfDz8hw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+	<main class="main">
+		<header class="header">
+			<h1 class="header__title title--primary">MINTING GAME</h1>
+			<button class="btn btn--status" onclick="connect()" id="myWallet">Connect Wallet OFF</button>
+		</header>
+		<section class="container-flex">
+			<div class="service">
+				<div class="service__block service__block--input">
+					<h2 class="title--sub-y">Minting Block Number</h2>
+					<div>
+						<h3 class="title--sub-w">CURRENT BLOCK</h3>
+						<span class="service__input service__input--w" id="blockNumber">#00000000</span>
+					</div>
+					<div>
+						<h3 class="title--sub-w">MINTING STARTS AT</h3>
+						<span class="service__input service__input--y" id="mintStartBlockNumber">#00000000</span>
+					</div>
+				</div>
+				<p class="service__paragraph">
+					보다 정확한 현재 블록 정보는 <br />
+					클레이튼 스코프 or 클레이스왑을 참고 바랍니다.
+				</p>
+				<div class="service__btn-block">
+					<button class="btn btn--sub" href="https://scope.klaytn.com/" target="_blank">Klaytnscope ></button>
+					<button class="btn btn--sub" href="https://klayswap.com/" target="_blank">Klayswap ></button>
+				</div>
+			</div>
+			<div class="service">
+				<div>
+					<div class="service__block">
+						<h2 class="title--sub-y">Price</h2>
+						<div class="service__alert service__alert--price">1</div>
+					</div>
+					<br/>
+					<div class="service__block">
+						<h2 class="title--sub-y">Amount</h2>
+						<br />
+						<div class="service__alert service__alert--amount">민팅 수량은 <strong class="strong">1개</strong>로 고정되어 있습니다.
+						</div>
+					</div>
+				</div>
+				<div>
+					<p class="service__paragraph">
+						민팅은 새로고침 없이 진행됩니다.
+					</p>
+					<br/>
+					<button class="btn btn--primary" onclick="publicMint()">MINTING</button>
+				</div>
+			</div>
+		</section>
+	</main>
+	<script>
+		document.addEventListener("DOMContentLoaded", async function (event) {
+			const accounts = await klaytn.enable();
+			if (!accounts) {
+				alert("KaiKas 확장 프로그램을 활성화 해주세요!");
+			}
+			check_status();
+		});
+	</script>
+</body>
+
+</html>
