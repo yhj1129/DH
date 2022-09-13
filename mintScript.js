@@ -83,33 +83,74 @@ async function publicMint() {
         return;
     }
     const total_value = BigNumber(amount * mintPrice);
-    
-    try{
-        
-        // const response = await myContract.methods.publicMint(amount).call({
-        //     from: account,
-        //     gas: 6000000
-        // })
-        const response = await caver.klay.sendTransaction({
-            type: "SMART_CONTRACT_EXECUTION",
-            from: account,
-            to: CONTRACTADDRESS,
-            gas: 6000000,
-            data: myContract.methods.publicMint(amount).encodeABI(),
-        }); 
-        const gasAmount = await myContract.methods.publicMint(amount).estimateGas({
-            from: account,
-            gas: 6000000,
-            value: total_value
-        })
-        const result = await myContract.methods.publicMint(amount).send({
-            from: account,
-            gas: gasAmount,
-            value: total_value
-        })
-        if (result != null) {
-            console.log(result);
-            alert("민팅에 성공하였습니다.");
+    const gasAmount = await myContract.methods.publicMint(amount).estimateGas({
+        from: account,
+        gas: 6000000,
+        value: total_value
+    })
+    // try{
+    //     // const response = await myContract.methods.publicMint(amount).call({
+    //     //     from: account,
+    //     //     gas: 6000000
+    //     // })
+    //     const result = await caver.klay.sendTransaction({
+    //         type: "SMART_CONTRACT_EXECUTION",
+    //         from: account,
+    //         to: CONTRACTADDRESS,
+    //         gas: gasAmount,
+    //         value: total_value,
+    //         data: myContract.methods.publicMint(amount).encodeABI(),
+    //     }); 
+    //     // const result = await myContract.methods.publicMint(amount).send({
+    //     //     from: account,
+    //     //     gas: gasAmount,
+    //     //     value: total_value
+    //     // })
+    //     if (result != null) {
+    //         console.log(result);
+    //         alert("민팅에 성공하였습니다.");
+    //     }
+    try {
+        // const response = await mintNFTContract?.methods.mintNFT().send({
+        //   from: account,
+        //   value: caver?.utils.convertToPeb(2, "KLAY"),
+        //   gas: 3000000,
+        // });
+  
+        setIsLoading(true);
+  
+        const response = await caver?.klay.sendTransaction({
+          type: "SMART_CONTRACT_EXECUTION",
+          from: account,
+          to: MINT_NFT_ADDRESS,
+          gas: 3000000,
+          data: mintNFTContract?.methods.mintNFT().encodeABI(),
+        });
+  
+        if (response?.status) {
+          const balanceOf = await mintNFTContract?.methods
+            .balanceOf(account)
+            .call();
+  
+          if (balanceOf) {
+            const myNewNFT = await mintNFTContract?.methods
+              .tokenOfOwnerByIndex(account, balanceOf - 1)
+              .call();
+  
+            if (myNewNFT) {
+              const tokenURI = await mintNFTContract?.methods
+                .tokenURI(myNewNFT)
+                .call();
+  
+              if (tokenURI) {
+                const imageResponse = await axios.get(tokenURI);
+  
+                if (imageResponse.status === 200) {
+                  setNewNFT(imageResponse.data);
+                }
+              }
+            }
+          }
         }
         } catch (error) {
             if (blockNumber <= mintStartBlockNumber){
